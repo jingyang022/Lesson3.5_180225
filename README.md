@@ -1,2 +1,5 @@
-# Lesson3.5_180225
-for lesson 3.5 Class Activity
+## Lesson 3.5 Class Activity: ECS + ECR with X-Ray Sidecar
+
+<p>Step 1: Create app.py, requirements and Dockerfile files
+<br>Step 2: Create a private ECR repository on AWS
+<br>Step 3: Build and Push your image into your ECR repository
