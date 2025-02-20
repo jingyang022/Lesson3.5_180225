@@ -7,7 +7,7 @@ resource "aws_ecs_cluster" "ecs_cluster" {
 resource "aws_ecs_task_definition" "flask-xray-taskdef" {
   family = "yap-flask-xray-taskdef"
   task_role_arn            = aws_iam_role.ecs_task_role.arn
-  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn       = aws_iam_role.ecs_exec_role.arn
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = 1024
@@ -17,8 +17,8 @@ resource "aws_ecs_task_definition" "flask-xray-taskdef" {
     {
       name      = "flask-app"
       image     = "255945442255.dkr.ecr.ap-southeast-1.amazonaws.com/yap-flask-xray-repo:latest"
-      cpu       = 1024
-      memory    = 3072
+      cpu       = 512
+      memory    = 1024
       essential = true
       portMappings = [
         {
@@ -27,26 +27,30 @@ resource "aws_ecs_task_definition" "flask-xray-taskdef" {
           protocol      = "tcp"
         }
       ]
-       environment = [
+
+      environment = [
         {
-          name  = "MY_APP_CONFIG"
-          value = "arn:aws:ssm:ap-southeast-1:255945442255:parameter/yapapp/config"
-        },
-        {
-          name  = "MY_DB_PASSWORD"
-          value = "arn:aws:secretsmanager:ap-southeast-1:255945442255:secret:yapapp/db_password-VRnUa9"
-        },
-        {
-          name  = "SERVICE_NAME"
-          value = "yap-flask-xray-service"
-        },
+          "name" : "SERVICE_NAME", "value": "yap-flask-xray-service"
+        }
       ]
+
+      secrets = [
+    {
+        "name": "MY_APP_CONFIG",
+        "valueFrom": "arn:aws:ssm:ap-southeast-1:255945442255:parameter/yapapp/config"
     },
+    {
+        "name" : "MY_DB_PASSWORD",
+        "valueFrom": "arn:aws:secretsmanager:ap-southeast-1:255945442255:secret:yapapp/db_password-VRnUa9"
+    }
+  ]
+  
+  },
     {
       name      = "xray-sidecar"
       image     = "amazon/aws-xray-daemon"
-      cpu       = 1024
-      memory    = 3072
+      cpu       = 512
+      memory    = 1024
       essential = false
       portMappings = [
         {

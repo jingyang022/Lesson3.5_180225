@@ -1,19 +1,19 @@
 # Create ECS task role
 resource "aws_iam_role" "ecs_task_role" {
- name = "yap-ecs-xray-taskrole"
+  name = "yap-ecs-xray-taskrole"
 
   assume_role_policy = jsonencode({
-   Version = "2012-10-17",
-   Statement = [
-     {
-       Action = "sts:AssumeRole",
-       Principal = {
-         Service = "ecs-tasks.amazonaws.com"
-       },
-       Effect = "Allow"
-     }
-   ]
- })
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = "sts:AssumeRole",
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com"
+        },
+        Effect = "Allow"
+      }
+    ]
+  })
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_attachment" {
@@ -24,20 +24,20 @@ resource "aws_iam_role_policy_attachment" "ecs_task_attachment" {
 
 # Create ECS task execution role
 resource "aws_iam_role" "ecs_exec_role" {
- name = "yap-ecs-xray-taskexecutionrole"
+  name = "yap-ecs-xray-taskexecutionrole"
 
   assume_role_policy = jsonencode({
-   Version = "2012-10-17",
-   Statement = [
-     {
-       Action = "sts:AssumeRole",
-       Principal = {
-         Service = "ecs-tasks.amazonaws.com"
-       },
-       Effect = "Allow"
-     }
-   ]
- })
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = "sts:AssumeRole",
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com"
+        },
+        Effect = "Allow"
+      }
+    ]
+  })
 }
 
 resource "aws_iam_role_policy_attachment" "ECSTaskExecutionRolePolicy_attachment" {
